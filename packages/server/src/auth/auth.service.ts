@@ -1,7 +1,13 @@
-import { Injectable, HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
+import { Request } from 'express';
 import { UserService } from '../supabase/user';
 import {
   KakaoCallbackDto,
@@ -9,7 +15,7 @@ import {
   AuthResponseDto,
   AuthUser,
 } from '../dto/kakao-callback.dto';
-import { Provider, JwtPayload } from '../types';
+import { JwtPayload } from '../types';
 
 interface KakaoTokenResponse {
   access_token: string;
@@ -29,10 +35,14 @@ export class AuthService {
 
   async handleKakaoCallback(
     callbackDto: KakaoCallbackDto,
+    request: Request,
   ): Promise<AuthResponseDto> {
     try {
       // 1. 인가 코드로 액세스 토큰 교환
-      const tokenResponse = await this.exchangeCodeForToken(callbackDto.code);
+      const tokenResponse = await this.exchangeCodeForToken(
+        callbackDto.code,
+        request,
+      );
 
       // 2. 액세스 토큰으로 사용자 정보 조회
       const userInfo = await this.getKakaoUserInfo(tokenResponse.access_token);
@@ -50,7 +60,10 @@ export class AuthService {
     }
   }
 
-  private async exchangeCodeForToken(code: string): Promise<{
+  async exchangeCodeForToken(
+    code: string,
+    request: Request,
+  ): Promise<{
     access_token: string;
     token_type: string;
     refresh_token?: string;
@@ -61,7 +74,10 @@ export class AuthService {
     const kakaoClientSecret = this.configService.get<string>(
       'KAKAO_CLIENT_SECRET',
     );
-    const redirectUri = this.configService.get<string>('KAKAO_REDIRECT_URI');
+
+    // 요청의 origin을 사용해서 동적으로 redirectUri 생성
+    const origin = request.headers.origin || `https://${request.headers.host}`;
+    const redirectUri = `${origin}/auth/callback/kakao`;
 
     if (!kakaoClientId || !kakaoClientSecret || !redirectUri) {
       throw new Error('카카오 OAuth 설정이 올바르지 않습니다.');
@@ -161,11 +177,12 @@ export class AuthService {
 
       console.log('사용자 정보:', JSON.stringify(dbUser, null, 2));
 
-      // AuthUser 타입으로 변환
+      // AuthUser 타입으로 변환 (관리자 권한 포함)
       const user: AuthUser = {
         userId: dbUser.userId,
         provider: dbUser.provider,
         nickname: dbUser.nickname,
+        isAdmin: await this.userService.isUserAdmin(dbUser.userId),
       };
 
       // JWT 토큰 생성
@@ -211,7 +228,10 @@ export class AuthService {
       // 사용자 존재 확인
       const user = await this.userService.getUserByUserId(payload.userId);
       if (!user) {
-        throw new HttpException('사용자를 찾을 수 없습니다.', HttpStatus.UNAUTHORIZED);
+        throw new HttpException(
+          '사용자를 찾을 수 없습니다.',
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
       // 새로운 토큰 생성
@@ -221,7 +241,9 @@ export class AuthService {
         provider: user.provider,
       };
 
-      const newAccessToken = this.jwtService.sign(newPayload);
+      const newAccessToken = this.jwtService.sign(newPayload, {
+        expiresIn: '1m', // 테스트용: 1분 (운영시는 1h로 변경)
+      });
       const newRefreshToken = this.jwtService.sign(newPayload, {
         expiresIn: '30d',
       });
@@ -232,7 +254,10 @@ export class AuthService {
       };
     } catch (error) {
       console.error('토큰 갱신 실패:', error);
-      throw new HttpException('토큰 갱신에 실패했습니다.', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        '토큰 갱신에 실패했습니다.',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 

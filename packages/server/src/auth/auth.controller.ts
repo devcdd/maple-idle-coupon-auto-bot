@@ -48,9 +48,13 @@ export class AuthController {
   })
   async kakaoCallback(
     @Body() callbackDto: KakaoCallbackDto,
+    @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<AuthResponseDto> {
-    const authResponse = await this.authService.handleKakaoCallback(callbackDto);
+    const authResponse = await this.authService.handleKakaoCallback(
+      callbackDto,
+      request,
+    );
 
     // RefreshToken을 응답 헤더에 추가 (프론트엔드에서 쿠키로 저장)
     response.setHeader('x-refresh-token', authResponse.refreshToken);
@@ -89,7 +93,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: '토큰 갱신',
-    description: 'Refresh Token을 사용하여 새로운 Access Token과 Refresh Token을 발급합니다.',
+    description:
+      'Refresh Token을 사용하여 새로운 Access Token과 Refresh Token을 발급합니다.',
   })
   @ApiResponse({
     status: 200,
@@ -108,6 +113,10 @@ export class AuthController {
   })
   async refreshTokens(@Req() request: Request, @Res() response: Response) {
     try {
+      console.log('🔄 Refresh API 호출됨');
+      console.log('🍪 요청 쿠키:', request.cookies);
+      console.log('🍪 Refresh Token 쿠키:', request.cookies?.refreshToken);
+
       // 쿠키에서 refreshToken 가져오기
       const refreshToken = request.cookies?.refreshToken;
 
@@ -128,6 +137,8 @@ export class AuthController {
       return response.json({
         success: true,
         message: '토큰이 갱신되었습니다.',
+        accessToken: tokens.accessToken, // body에도 토큰 포함 (헤더 + body 이중 보장)
+        refreshToken: tokens.refreshToken,
       });
     } catch (error) {
       console.error('토큰 갱신 실패:', error);
