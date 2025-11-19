@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # 클라이언트 (프론트엔드) - nginx
+  makis-client:
+    image: developercdd/makis-client:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - '4000:80'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    profiles:
+      - client
+      - full
+    networks:
+      - makis-network
+
+  # 서버 (백엔드) - NestJS
+  makis-server:
+    image: developercdd/makis-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - '4010:4010'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=4010
+    restart: unless-stopped
+    profiles:
+      - server
+      - full
+    networks:
+      - makis-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:4010/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 통합 애플리케이션 (기존 방식) - 유지보수용
+  makis-app:
+    image: developercdd/makis-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=5000
+      - VITE_SERVER_URL=http://localhost:5000
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - KAKAO_APP_KEY=${KAKAO_APP_KEY}
+      - VITE_KAKAO_APP_KEY=${VITE_KAKAO_APP_KEY}
+    restart: unless-stopped
+    profiles:
+      - legacy
+    networks:
+      - makis-network
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Docker 네트워크 (컨테이너 간 통신용)
+networks:
+  makis-network:
+    driver: bridge

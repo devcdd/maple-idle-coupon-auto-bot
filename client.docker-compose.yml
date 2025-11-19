@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  makis-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - '4000:80'
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production

@@ -1,0 +1,14 @@
+# Client Dockerfile - nginx로 정적 파일 서빙
+FROM nginx:alpine
+
+# nginx 설정 파일 복사
+COPY nginx.client.conf /etc/nginx/nginx.conf
+
+# 빌드된 클라이언트 파일들 복사
+COPY packages/client/dist /usr/share/nginx/html
+
+# 포트 80 노출
+EXPOSE 80
+
+# nginx 실행
+CMD ["nginx", "-g", "daemon off;"]

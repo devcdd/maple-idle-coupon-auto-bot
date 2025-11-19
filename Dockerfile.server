@@ -1,0 +1,54 @@
+# Multi-stage build for server only
+
+# Base stage with pnpm
+FROM node:24-alpine AS base
+RUN npm install -g pnpm
+WORKDIR /app
+
+# Dependencies stage - install all deps
+FROM base AS deps
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/server/package.json ./packages/server/
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+# Server build stage
+FROM deps AS build-server
+COPY packages/server/src ./packages/server/src
+COPY packages/server/tsconfig*.json ./packages/server/
+COPY packages/server/nest-cli.json ./packages/server/
+COPY packages/server/.swcrc ./packages/server/
+WORKDIR /app/packages/server
+RUN pnpm build
+
+# Production stage - server only
+FROM node:24-alpine AS production
+
+# Install pnpm and curl for healthcheck
+RUN npm install -g pnpm && apk add --no-cache curl
+
+WORKDIR /app
+
+# Copy built server
+COPY --from=build-server /app/packages/server/dist ./packages/server/dist
+COPY --from=build-server /app/packages/server/package.json ./packages/server/
+
+# Copy package files for dependency installation
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/server/package.json ./packages/server/
+
+# Install only production dependencies
+WORKDIR /app/packages/server
+RUN pnpm install --prod --frozen-lockfile --ignore-scripts
+
+# Expose port
+EXPOSE 4010
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:4010/health || exit 1
+
+# Start the application
+CMD ["pnpm", "start:prod"]
