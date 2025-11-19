@@ -8,7 +8,23 @@ import {
   useRegisterUserMutation,
   type RegisterUserResponse,
 } from '@/features/register-user';
-import { VALIDATION_MESSAGES, SUBMIT_PAGE_TEXTS, SERVER_ERROR_MESSAGES } from '@/constants';
+import {
+  VALIDATION_MESSAGES,
+  SUBMIT_PAGE_TEXTS,
+  SERVER_ERROR_MESSAGES,
+} from '@/constants';
+
+// UUID 가이드 이미지 import
+import uuidGuide1 from '@/assets/images/uuid-guide-1.png';
+import uuidGuide2 from '@/assets/images/uuid-guide-2.png';
+import uuidGuide3 from '@/assets/images/uuid-guide-3.png';
+
+// UUID 가이드 이미지 매핑
+const UUID_GUIDE_IMAGES = {
+  step1: uuidGuide1,
+  step2: uuidGuide2,
+  step3: uuidGuide3,
+};
 
 export function SubmitPage() {
   const userIdInput = useInput({
@@ -163,8 +179,8 @@ export function SubmitPage() {
                 <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
                   <img
                     src={
-                      SUBMIT_PAGE_TEXTS.uuidGuide.images[
-                        step.image as keyof typeof SUBMIT_PAGE_TEXTS.uuidGuide.images
+                      UUID_GUIDE_IMAGES[
+                        step.image as keyof typeof UUID_GUIDE_IMAGES
                       ]
                     }
                     alt={`${step.title} 가이드 이미지`}
@@ -184,10 +200,7 @@ export function SubmitPage() {
                               index + 1
                             }: ${step.title.replace(/\d+단계:\s*/, '')}</p>
                             <p class="text-xs text-gray-400 mt-1">
-                              ${
-                                SUBMIT_PAGE_TEXTS.uuidGuide.images[
-                                  step.image as keyof typeof SUBMIT_PAGE_TEXTS.uuidGuide.images
-                                ]
+                              ${step.title.replace(/\d+단계:\s*/, '')}
                               } 경로에 이미지를 넣어주세요
                             </p>
                           </div>

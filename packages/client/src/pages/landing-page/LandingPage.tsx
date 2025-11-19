@@ -26,31 +26,17 @@ export function LandingPage() {
                 <Button
                   size="lg"
                   className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
-                  asChild
                 >
                   <a href="/submit">UUID 등록하기</a>
                 </Button>
               ) : (
-                // 로그인되지 않은 상태 - 로그인과 무료로 시작하기 버튼
-                <>
-                  <Button
-                    size="lg"
-                    className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
-                    asChild
-                  >
-                    <a href="/login">{LANDING_PAGE_TEXTS.hero.buttons.login}</a>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
-                    asChild
-                  >
-                    <a href="/submit">
-                      {LANDING_PAGE_TEXTS.hero.buttons.start}
-                    </a>
-                  </Button>
-                </>
+                // 로그인되지 않은 상태 - UUID 등록하기 버튼
+                <Button
+                  size="lg"
+                  className="text-lg px-[var(--spacing-3xl)] py-[var(--spacing-xl)]"
+                >
+                  <a href="/submit">{LANDING_PAGE_TEXTS.hero.buttons.login}</a>
+                </Button>
               )}
             </div>
           </div>

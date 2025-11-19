@@ -3,7 +3,7 @@ export function MainPage() {
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-[var(--color-gray-900)] mb-[var(--spacing-lg)]">
-          마키스에 오신 것을 환영합니다
+          메키스에 오신 것을 환영합니다
         </h1>
         <p className="text-lg text-[var(--color-gray-600)] mb-[var(--spacing-xl)]">
           회원가입을 통해 다양한 서비스를 이용해보세요

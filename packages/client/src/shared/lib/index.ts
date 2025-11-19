@@ -7,4 +7,3 @@ export {
 } from './cookies';
 
 export { axiosInstance } from './axiosInstance';
-

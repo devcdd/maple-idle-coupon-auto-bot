@@ -19,7 +19,7 @@ export function setRefreshToken(
   Cookies.set(COOKIE_KEYS.REFRESH_TOKEN, refreshToken, {
     expires: 30, // 30일
     secure: import.meta.env.PROD, // production에서만 secure
-    sameSite: 'strict',
+    sameSite: import.meta.env.PROD ? 'strict' : 'lax', // 개발환경에서는 lax로 설정
     ...options,
   });
 }

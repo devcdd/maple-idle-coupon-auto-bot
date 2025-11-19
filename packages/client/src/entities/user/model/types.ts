@@ -10,6 +10,7 @@ export interface User {
   userId: string;
   provider: Provider;
   nickname?: string | null;
+  isAdmin?: boolean;
 }
 
 /**

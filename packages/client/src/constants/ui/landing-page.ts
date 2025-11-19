@@ -9,7 +9,7 @@ export const LANDING_PAGE_TEXTS = {
     description:
       '번거로운 UUID 복사와 쿠폰 코드 입력은 이제 그만! 등록만 하면 자동으로 쿠폰을 적용해드립니다.',
     buttons: {
-      login: '로그인',
+      login: 'UUID 등록하기',
       start: '무료로 시작하기',
       learnMore: '자세히 알아보기',
     },

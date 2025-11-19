@@ -9,7 +9,7 @@ interface KakaoSDK {
 
 declare global {
   interface Window {
-    Kakao: KakaoSDK;
+    Kakao?: KakaoSDK;
   }
 }
 

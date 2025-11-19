@@ -104,28 +104,6 @@ export function LoginPage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                   </Button>
 
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-[var(--color-gray-200)]"></div>
-                    </div>
-                    <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-[var(--color-card)] text-[var(--color-gray-500)]">
-                        또는
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-center">
-                    <p className="text-sm text-[var(--color-gray-600)]">
-                      계정이 없으신가요?{' '}
-                      <a
-                        href="/submit"
-                        className="text-[var(--color-primary)] hover:text-[var(--color-primary-700)] font-medium underline"
-                      >
-                        무료로 시작하기
-                      </a>
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>

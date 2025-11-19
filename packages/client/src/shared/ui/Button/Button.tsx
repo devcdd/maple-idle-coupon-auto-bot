@@ -1,4 +1,5 @@
-import { ReactNode, ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
+import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 

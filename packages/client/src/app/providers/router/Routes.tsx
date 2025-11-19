@@ -4,6 +4,7 @@ import { SubmitPage } from '@/pages/submit';
 import { LoginPage } from '@/pages/login-page';
 import { AuthCallbackPage } from '@/pages/auth-callback';
 import { NicknameSetupPage } from '@/pages/nickname-setup';
+import { AdminPage } from '@/pages/admin-page';
 import { Header } from '@/widgets/Header';
 import { Error404 } from './Error404';
 
@@ -50,6 +51,15 @@ const router = createBrowserRouter([
       <div className="min-h-screen bg-[var(--color-surface)]">
         <Header />
         <NicknameSetupPage />
+      </div>
+    ),
+  },
+  {
+    path: '/admin',
+    element: (
+      <div className="min-h-screen bg-[var(--color-surface)]">
+        <Header />
+        <AdminPage />
       </div>
     ),
   },

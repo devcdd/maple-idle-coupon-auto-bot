@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
 
-// 카카오 SDK 타입 정의
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
 
 export const useKakaoSDK = () => {
   const [kakao, setKakao] = useState<any>(null);

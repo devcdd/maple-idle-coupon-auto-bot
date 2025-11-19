@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { NAVIGATION_TEXTS } from '@/constants';
 import { useAuthStore } from '@/features/auth';
+import { Button } from '@/shared/ui/Button';
 
 export function Header() {
   const { user, clearAuth } = useAuthStore();
@@ -22,24 +23,23 @@ export function Header() {
             {user ? (
               // 로그인된 상태
               <>
-                <span className="text-[var(--color-gray-600)]">
+                <span className="text-[var(--color-primary)] font-semibold">
                   환영합니다, {user.nickname || user.userId}님
                 </span>
-                <button
-                  onClick={handleLogout}
-                  className="text-[var(--color-gray-600)] hover:text-[var(--color-gray-900)] transition-colors"
-                >
+                {user.isAdmin && (
+                  <Button variant="outline" size="sm">
+                    <Link to="/admin">관리자</Link>
+                  </Button>
+                )}
+                <Button variant="outline" size="sm" onClick={handleLogout}>
                   로그아웃
-                </button>
+                </Button>
               </>
             ) : (
               // 로그인되지 않은 상태
-              <Link
-                to="/login"
-                className="text-[var(--color-gray-600)] hover:text-[var(--color-gray-900)] transition-colors"
-              >
-                로그인
-              </Link>
+              <Button variant="outline" size="sm">
+                <Link to="/login">로그인</Link>
+              </Button>
             )}
           </nav>
         </div>
