@@ -43,9 +43,9 @@ export function LandingPage() {
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-[var(--color-primary-200)] rounded-full opacity-20"></div>
+        {/* <div className="absolute top-10 left-10 w-20 h-20 bg-[var(--color-primary-200)] rounded-full opacity-20"></div>
         <div className="absolute bottom-10 right-10 w-32 h-32 bg-[var(--color-secondary-200)] rounded-full opacity-20"></div>
-        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[var(--color-accent-200)] rounded-full opacity-20"></div>
+        <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[var(--color-accent-200)] rounded-full opacity-20"></div> */}
       </section>
 
       {/* Features Section */}
