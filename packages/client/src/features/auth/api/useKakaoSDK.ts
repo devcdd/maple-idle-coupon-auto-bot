@@ -5,11 +5,7 @@ interface KakaoSDK {
   init: (appKey: string) => void;
   isInitialized: () => boolean;
   Auth: {
-    authorize: (options: {
-      redirectUri: string;
-      scope?: string;
-      popup?: boolean;
-    }) => void;
+    authorize: (options: { redirectUri: string; scope?: string }) => void;
   };
 }
 

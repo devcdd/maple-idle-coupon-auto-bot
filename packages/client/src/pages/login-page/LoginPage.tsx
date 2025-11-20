@@ -13,7 +13,6 @@ export function LoginPage() {
     try {
       kakao.Auth.authorize({
         redirectUri: `${window.location.origin}/auth/callback/kakao`,
-        popup: true,
       });
     } catch (error) {
       console.error('카카오 로그인 중 오류 발생:', error);
@@ -86,15 +85,7 @@ export function LoginPage() {
                           ></path>
                         </svg>
                       )}
-                      {isLoaded && (
-                        <svg
-                          className="w-6 h-6"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M12 2C6.48 2 2 5.84 2 10.34c0 3.12 1.68 5.88 4.32 7.66-.08.32-.24.92-.48 1.56-.04.12-.08.24-.08.32 0 .12.04.24.12.32.4.48 3.28 2.24 5.92 2.72.04 0 .08 0 .12.04.12.04.24.04.32.04.12 0 .24-.04.32-.12.12-.04.24-.12.32-.2.32-.2 1.16-1.04 1.52-1.68.08-.12.16-.24.16-.36 0-.08-.04-.16-.12-.24-.24-.48-.4-.92-.52-1.32C18.32 16.22 20 13.46 20 10.34 20 5.84 15.52 2 12 2z" />
-                        </svg>
-                      )}
+
                       {isError && <span>⚠️</span>}
                       {!isLoaded && !isError
                         ? '카카오 SDK 로딩 중...'

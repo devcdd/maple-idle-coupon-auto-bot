@@ -34,19 +34,12 @@ echo "🔨 프로덕션 이미지 빌드 중..."
 # 클라이언트 빌드
 echo "📱 클라이언트 빌드..."
 
-# 프로덕션용 환경변수 파일 준비
+# 프로덕션용 환경변수 파일 사용
 echo "📋 .env.production 파일을 사용하여 빌드합니다."
-cp .env.production .env.production.tmp
 
-# 빌드용 환경변수 파일로 이름 변경
-mv .env.production.tmp .env.production
-
-# Vite 빌드 실행
+# Vite 빌드 실행 (Vite가 자동으로 .env.production을 읽음)
 echo "   - Vite 빌드 실행..."
 pnpm --filter makis-client build
-
-# 임시 파일 정리 (빌드 후 .env.production 파일 삭제)
-rm .env.production
 
 # Docker 이미지 빌드
 CLIENT_IMAGE="${REGISTRY}/makis-client:${TAG}"
