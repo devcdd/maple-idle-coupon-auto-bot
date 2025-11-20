@@ -242,7 +242,7 @@ export class AuthService {
       };
 
       const newAccessToken = this.jwtService.sign(newPayload, {
-        expiresIn: '1m', // 테스트용: 1분 (운영시는 1h로 변경)
+        expiresIn: '1h', // 테스트용: 1분 (운영시는 1h로 변경)
       });
       const newRefreshToken = this.jwtService.sign(newPayload, {
         expiresIn: '30d',
